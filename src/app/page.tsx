@@ -97,7 +97,11 @@ export default function Home() {
                     data={intakeData}
                     aiData={aiData}
                     onBack={() => setStep(1)}
-                    onConfirm={handleConfirm}
+                    onConfirm={(updatedData: any, updatedAiData: any) => {
+                        setIntakeData(updatedData);
+                        setAiData(updatedAiData);
+                        handleConfirm();
+                    }}
                     isGenerating={isGenerating}
                 />
             )}

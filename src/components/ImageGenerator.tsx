@@ -37,11 +37,11 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
                         userImg.onerror = reject;
                     });
 
-                    // Tuned coordinates: shrunk slightly and shifted to fit closely inside the purple line
+                    // Tuned coordinates: shrunk slightly and shifted down below the Odds text into the purple border
                     const boxX = 645;
-                    const boxY = 1910;
+                    const boxY = 2200;
                     const boxW = 2710;
-                    const boxH = 2960;
+                    const boxH = 2660;
 
                     ctx.drawImage(userImg, boxX, boxY, boxW, boxH);
                 }
@@ -54,18 +54,15 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
                 ctx.fillText(dateStr, width / 2, 600);
 
                 // 4. Draw Pick Text
-                // Made purple instead of white so it is visible against the white template box
                 ctx.font = 'bold 360px sans-serif';
                 ctx.fillStyle = '#8b5cf6';
-                ctx.fillText(data.pick.toUpperCase(), width / 2, 1150);
+                ctx.fillText(data.pick.toUpperCase(), width / 2, 1420); // Baseline pushed deep into the white box
 
                 // 5. Draw Odds and Risk
                 ctx.font = 'bold 240px sans-serif';
                 ctx.fillStyle = '#8b5cf6';
                 const oddsRiskStr = `${data.odds} | ${data.risk}U`;
-                ctx.fillText(oddsRiskStr, width / 2, 1750); // Lowered closer to image
-
-                // Note: AI insight drawing removed per request
+                ctx.fillText(oddsRiskStr, width / 2, 1950); // Lowered closer to image
 
                 // Export and dispatch
                 const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
