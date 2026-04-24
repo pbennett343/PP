@@ -19,13 +19,6 @@ export default function IntakeScreen({ onSubmit, onBack, isAnalyzing }: { onSubm
         <div className="card animate-fade-in">
             <h2 className="section-title">Step 1: Intake</h2>
             <div className="form-group">
-                <label>Upload Source Image</label>
-                <div className="file-upload-wrapper">
-                    <input type="file" accept="image/*" onChange={handleImageChange} />
-                </div>
-                {image && <img src={image} alt="Preview" className="img-preview" />}
-            </div>
-            <div className="form-group">
                 <label>Pick Text</label>
                 <textarea
                     value={pick}
@@ -54,6 +47,13 @@ export default function IntakeScreen({ onSubmit, onBack, isAnalyzing }: { onSubm
                     placeholder="e.g. 2"
                     className="input-field"
                 />
+            </div>
+            <div className="form-group">
+                <label>Upload Stat Image</label>
+                <div className="file-upload-wrapper">
+                    <input type="file" accept="image/*" onChange={handleImageChange} />
+                </div>
+                {image && <img src={image} alt="Preview" className="img-preview" />}
             </div>
             <div className="button-group">
                 <button className="secondary-btn" onClick={onBack} disabled={isAnalyzing}>Home</button>
