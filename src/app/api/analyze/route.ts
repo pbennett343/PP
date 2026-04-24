@@ -28,11 +28,12 @@ Return your response in strict JSON format exactly like this:
 
         const result = await model.generateContent(prompt);
         const resultText = result.response.text() || "{}";
-        const resultObj = JSON.parse(resultText);
+        const cleanJSON = resultText.replace(/```json/g, '').replace(/```/g, '').trim();
+        const resultObj = JSON.parse(cleanJSON);
 
         return NextResponse.json({ success: true, aiData: resultObj });
     } catch (error: any) {
         console.error("AI Error:", error);
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+        return NextResponse.json({ success: false, error: error.message || String(error) }, { status: 500 });
     }
 }

@@ -27,7 +27,7 @@ export default function Home() {
                 setAiData(result.aiData);
                 setStep(2);
             } else {
-                alert("AI processing failed. Check console.");
+                alert("AI processing failed: " + result.error);
             }
         } catch (e) {
             console.error(e);
@@ -87,7 +87,7 @@ export default function Home() {
     return (
         <main className="container wrapper">
             <div className="header-brand">
-                <h1 className="title">PP Workspace</h1>
+                <h1 className="title">WTF Bets Premium Pick Generator</h1>
                 <p className="subtitle">AI Graphic Compositor</p>
             </div>
 
