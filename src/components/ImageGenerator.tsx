@@ -18,8 +18,10 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
                     const response = await fetch(`/api/stats?sport=${sport}`);
                     const resData = await response.json();
                     if (resData.success && resData.units !== undefined) {
-                        const prefix = resData.units.toString().startsWith('-') ? '' : '+';
-                        statsText = `OUR ${sport} PICKS ARE ${prefix}${resData.units}U THIS YEAR`;
+                        const unitVal = parseFloat(resData.units.toString().replace(/,/g, ''));
+                        if (!isNaN(unitVal) && unitVal > 0) {
+                            statsText = `OUR ${sport} PICKS ARE +${resData.units}U THIS YEAR`;
+                        }
                     }
                 } catch (e) {
                     console.warn("Failed to retrieve stats:", e);
