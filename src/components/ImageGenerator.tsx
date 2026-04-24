@@ -75,18 +75,57 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
                 ctx.fillStyle = '#8b5cf6';
                 ctx.fillText(pickText, width / 2, pickY);
 
-                ctx.font = `bold ${220 * scale}px sans-serif`;
-                ctx.fillStyle = '#8b5cf6';
-
-                // Stack Odds and Risk explicitly cleanly
-                const oddsStr = `Odds: ${data.odds}`;
-                const riskStr = `Risk: ${data.risk} units`;
-
+                // --- NEW ODDS & RISK MULTI-FORMAT DRAWING ---
                 const oddsY = pickY + (400 * scale);
                 const riskY = oddsY + (260 * scale);
 
-                ctx.fillText(oddsStr, width / 2, oddsY);
-                ctx.fillText(riskStr, width / 2, riskY);
+                ctx.textAlign = 'left'; // Segment pieces requires targeted drawing relative to origin
+
+                // 1. Odds Line
+                const oddsLabel = "Odds: ";
+                const oddsVal = `${data.odds}`;
+
+                ctx.font = `normal ${150 * scale}px sans-serif`;
+                const mOddsLabel = ctx.measureText(oddsLabel).width;
+                ctx.font = `bold ${240 * scale}px sans-serif`;
+                const mOddsVal = ctx.measureText(oddsVal).width;
+
+                // Calculate the central span
+                const totalOddsW = mOddsLabel + mOddsVal;
+                const startOddsX = (width / 2) - (totalOddsW / 2);
+
+                // Draw segmented
+                ctx.font = `normal ${150 * scale}px sans-serif`;
+                ctx.fillStyle = '#a1a1aa'; // Subtle grey
+                ctx.fillText(oddsLabel, startOddsX, oddsY);
+
+                ctx.font = `bold ${240 * scale}px sans-serif`;
+                ctx.fillStyle = '#8b5cf6'; // Bold purple
+                ctx.fillText(oddsVal, startOddsX + mOddsLabel, oddsY);
+
+                // 2. Risk Line
+                const riskLabel = "Risk: ";
+                const riskVal = `${data.risk} units`;
+
+                ctx.font = `normal ${150 * scale}px sans-serif`;
+                const mRiskLabel = ctx.measureText(riskLabel).width;
+                ctx.font = `bold ${240 * scale}px sans-serif`;
+                const mRiskVal = ctx.measureText(riskVal).width;
+
+                const totalRiskW = mRiskLabel + mRiskVal;
+                const startRiskX = (width / 2) - (totalRiskW / 2);
+
+                ctx.font = `normal ${150 * scale}px sans-serif`;
+                ctx.fillStyle = '#a1a1aa';
+                ctx.fillText(riskLabel, startRiskX, riskY);
+
+                ctx.font = `bold ${240 * scale}px sans-serif`;
+                ctx.fillStyle = '#8b5cf6';
+                ctx.fillText(riskVal, startRiskX + mRiskLabel, riskY);
+
+                // Reset alignment for downstream metrics
+                ctx.textAlign = 'center';
+                // --- END NEW DRAWING ---
 
                 if (data.image) {
                     const userImg = new Image();
