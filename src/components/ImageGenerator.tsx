@@ -11,23 +11,70 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
             const ctx = canvas.getContext('2d');
             if (!ctx) return;
 
-            const width = 4000;
-            const height = 5333;
-            canvas.width = width;
-            canvas.height = height;
-
             try {
-                // 1. Load Background Template
+                // 1. Load Background Template Dynamically
                 const bgImg = new Image();
                 bgImg.crossOrigin = "anonymous";
-                bgImg.src = "/templates/Blank_PP.PNG";
+                bgImg.src = "/templates/PP_Template.png";
                 await new Promise((resolve, reject) => {
                     bgImg.onload = resolve;
                     bgImg.onerror = reject;
                 });
+
+                // Natively read the background layout resolution making it template agnostic
+                const width = bgImg.width;
+                const height = bgImg.height;
+                canvas.width = width;
+                canvas.height = height;
                 ctx.drawImage(bgImg, 0, 0, width, height);
 
-                // 2. Load and Draw User File
+                // Global Scaling Base (Calculates against native 4000px assumption)
+                const scale = width / 4000;
+
+                // 2. Draw Date
+                const dateStr = new Date().toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: '2-digit' });
+                ctx.font = `bold ${150 * scale}px sans-serif`;
+                ctx.fillStyle = '#8b5cf6';
+                ctx.textAlign = 'center';
+
+                // Typically Date can just sit right under Logo Area (~600)
+                const dateY = 600 * scale;
+                ctx.fillText(dateStr, width / 2, dateY);
+
+                // 3. Draw Dynamic Pick Box & Text
+                const pickText = data.pick.toUpperCase();
+                ctx.font = `bold ${360 * scale}px sans-serif`;
+                const pickMetrics = ctx.measureText(pickText);
+
+                const boxPaddingW = 400 * scale;
+                const finalBoxW = pickMetrics.width + boxPaddingW;
+                const rectW = Math.max(finalBoxW, width * 0.75); // At least 75% width
+                const rectH = 550 * scale;
+                const rectX = (width - rectW) / 2;
+
+                // Base the element stack downwards
+                const rectY = dateY + (200 * scale);
+                const pickY = rectY + Math.round(rectH * 0.75); // Text baseline inside box
+
+                // Draw the white rect and purple border behind
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(rectX, rectY, rectW, rectH);
+                ctx.lineWidth = 15 * scale;
+                ctx.strokeStyle = '#8b5cf6';
+                ctx.strokeRect(rectX, rectY, rectW, rectH);
+
+                // Draw Pick Text cleanly
+                ctx.fillStyle = '#8b5cf6';
+                ctx.fillText(pickText, width / 2, pickY);
+
+                // 4. Draw Odds and Risk Base
+                ctx.font = `bold ${240 * scale}px sans-serif`;
+                ctx.fillStyle = '#8b5cf6';
+                const oddsRiskStr = `${data.odds} | ${data.risk}U`;
+                const oddsY = pickY + (450 * scale);
+                ctx.fillText(oddsRiskStr, width / 2, oddsY);
+
+                // 5. Load and Draw User File Inside Vector Output
                 if (data.image) {
                     const userImg = new Image();
                     userImg.crossOrigin = "anonymous";
@@ -37,34 +84,42 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
                         userImg.onerror = reject;
                     });
 
-                    // Tuned coordinates: shrunk slightly and shifted down below the Odds text into the purple border
-                    const boxX = 645;
-                    const boxY = 2200;
-                    const boxW = 2710;
-                    const boxH = 2660;
+                    const imgMarginTop = 300 * scale;
+                    const imgMarginBottom = 400 * scale;
+                    const imgMarginSides = 500 * scale;
 
-                    ctx.drawImage(userImg, boxX, boxY, boxW, boxH);
+                    const imgStartX = imgMarginSides;
+                    const imgStartY = oddsY + imgMarginTop;
+                    const maxImgW = width - (imgMarginSides * 2);
+                    const maxImgH = height - imgStartY - imgMarginBottom;
+
+                    // Preserve ratio flawlessly
+                    const imgRatio = userImg.width / userImg.height;
+                    const boxRatio = maxImgW / maxImgH;
+
+                    let drawW, drawH;
+                    if (imgRatio > boxRatio) {
+                        drawW = maxImgW;
+                        drawH = maxImgW / imgRatio;
+                    } else {
+                        drawH = maxImgH;
+                        drawW = maxImgH * imgRatio;
+                    }
+
+                    // Center logically in the remaining space
+                    const drawX = imgStartX + (maxImgW - drawW) / 2;
+                    const drawY = imgStartY + (maxImgH - drawH) / 2;
+
+                    // Draw Uploaded Image Content
+                    ctx.drawImage(userImg, drawX, drawY, drawW, drawH);
+
+                    // Draw the tight perimeter bounds exact to native shape bounds
+                    ctx.lineWidth = 25 * scale;
+                    ctx.strokeStyle = '#8b5cf6';
+                    ctx.strokeRect(drawX, drawY, drawW, drawH);
                 }
 
-                // 3. Draw Date
-                const dateStr = new Date().toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: '2-digit' });
-                ctx.font = 'bold 150px sans-serif';
-                ctx.fillStyle = '#8b5cf6';
-                ctx.textAlign = 'center';
-                ctx.fillText(dateStr, width / 2, 600);
-
-                // 4. Draw Pick Text
-                ctx.font = 'bold 360px sans-serif';
-                ctx.fillStyle = '#8b5cf6';
-                ctx.fillText(data.pick.toUpperCase(), width / 2, 1420); // Baseline pushed deep into the white box
-
-                // 5. Draw Odds and Risk
-                ctx.font = 'bold 240px sans-serif';
-                ctx.fillStyle = '#8b5cf6';
-                const oddsRiskStr = `${data.odds} | ${data.risk}U`;
-                ctx.fillText(oddsRiskStr, width / 2, 1950); // Lowered closer to image
-
-                // Export and dispatch
+                // Export Payload 
                 const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
                 onComplete(dataUrl);
 
