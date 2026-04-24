@@ -17,13 +17,25 @@ export async function POST(req: Request) {
 
         // Active 2026 Write Sheet
         const spreadsheetId = '1gcqU3MNEZJpAhqDAkeUBiZBp6Xz4s2_kJzn-1UP8z_o';
-
         const sheetTab = sport.toUpperCase().trim();
+
+        // 1. Read Column A to find exactly which row is the first empty one
+        // We cannot use append() because Sheets counts formatting as "non-empty" rows!
+        const readRes = await sheets.spreadsheets.values.get({
+            spreadsheetId,
+            range: `${sheetTab}!A:A`,
+        });
+
+        const numRows = readRes.data.values ? readRes.data.values.length : 0;
+        // Assume minimum start is row 14 if less headers are found, else the very next row.
+        const targetRow = Math.max(numRows + 1, 14);
+
         const dateFormatted = new Date(timestamp).toLocaleDateString('en-US');
 
-        await sheets.spreadsheets.values.append({
+        // 2. Explicitly UPDATE the target row, bypassing append logic
+        await sheets.spreadsheets.values.update({
             spreadsheetId,
-            range: `${sheetTab}!A:D`,
+            range: `${sheetTab}!A${targetRow}:D${targetRow}`,
             valueInputOption: 'USER_ENTERED',
             requestBody: {
                 values: [[
