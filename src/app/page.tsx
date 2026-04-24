@@ -3,9 +3,10 @@ import { useState } from "react";
 import IntakeScreen from "@/components/IntakeScreen";
 import ReviewScreen from "@/components/ReviewScreen";
 import ImageGenerator from "@/components/ImageGenerator";
+import ResultsScreen from "@/components/ResultsScreen";
 
 export default function Home() {
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(0); // 0 = Home Screen
     const [intakeData, setIntakeData] = useState<any>(null);
     const [aiData, setAiData] = useState<any>(null);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -70,7 +71,7 @@ export default function Home() {
         alert("Asset Downloaded & Logged to 2026 Sheet!");
         setShowGenerator(false);
         setIsGenerating(false);
-        setStep(1);
+        setStep(0);
         setIntakeData(null);
         setAiData(null);
     };
@@ -88,6 +89,13 @@ export default function Home() {
                 <h1 className="title" style={{ fontSize: '2rem', marginTop: '0' }}>GENERATOR</h1>
             </div>
 
+            {step === 0 && (
+                <div className="card animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                    <button className="primary-btn" style={{ padding: '30px', fontSize: '1.2rem' }} onClick={() => setStep(1)}>MAKE PICK</button>
+                    <button className="secondary-btn" style={{ padding: '30px', fontSize: '1.2rem', borderColor: '#8b5cf6', color: '#8b5cf6' }} onClick={() => setStep(3)}>UPDATE RESULTS</button>
+                </div>
+            )}
+
             {step === 1 && (
                 <IntakeScreen onSubmit={handleIntakeSubmit} isAnalyzing={isAnalyzing} />
             )}
@@ -104,6 +112,10 @@ export default function Home() {
                     }}
                     isGenerating={isGenerating}
                 />
+            )}
+
+            {step === 3 && (
+                <ResultsScreen onBack={() => setStep(0)} />
             )}
 
             {showGenerator && (
