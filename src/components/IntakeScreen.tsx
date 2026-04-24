@@ -5,6 +5,7 @@ export default function IntakeScreen({ onSubmit, isAnalyzing }: { onSubmit: any,
     const [image, setImage] = useState<string | null>(null);
     const [pick, setPick] = useState("");
     const [odds, setOdds] = useState("");
+    const [risk, setRisk] = useState("");
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -44,10 +45,20 @@ export default function IntakeScreen({ onSubmit, isAnalyzing }: { onSubmit: any,
                     className="input-field"
                 />
             </div>
+            <div className="form-group">
+                <label>Risk (Units)</label>
+                <input
+                    type="text"
+                    value={risk}
+                    onChange={(e) => setRisk(e.target.value)}
+                    placeholder="e.g. 2"
+                    className="input-field"
+                />
+            </div>
             <button
                 className="primary-btn"
-                onClick={() => onSubmit({ image, pick, odds })}
-                disabled={!image || !pick || !odds || isAnalyzing}
+                onClick={() => onSubmit({ image, pick, odds, risk })}
+                disabled={!image || !pick || !odds || !risk || isAnalyzing}
             >
                 {isAnalyzing ? "Analyzing via AI..." : "Continue to AI Review"}
             </button>

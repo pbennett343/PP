@@ -31,19 +31,18 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
                 if (data.image) {
                     const userImg = new Image();
                     userImg.crossOrigin = "anonymous";
-                    userImg.src = data.image; // this is the blob URL created in Step 1
+                    userImg.src = data.image;
                     await new Promise((resolve, reject) => {
                         userImg.onload = resolve;
                         userImg.onerror = reject;
                     });
 
-                    // Approximate template coordinates (will be tuned based on visual feedback)
-                    const boxX = 633;
-                    const boxY = 1860;
-                    const boxW = 2733;
-                    const boxH = 2666;
+                    // Tuned coordinates: shrunk slightly and shifted to fit closely inside the purple line
+                    const boxX = 645;
+                    const boxY = 1910;
+                    const boxW = 2710;
+                    const boxH = 2960;
 
-                    // Draw image to fill box
                     ctx.drawImage(userImg, boxX, boxY, boxW, boxH);
                 }
 
@@ -52,22 +51,21 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
                 ctx.font = 'bold 150px sans-serif';
                 ctx.fillStyle = '#8b5cf6';
                 ctx.textAlign = 'center';
-                ctx.fillText(dateStr, width / 2, 700);
+                ctx.fillText(dateStr, width / 2, 600);
 
                 // 4. Draw Pick Text
-                ctx.font = 'bold 350px sans-serif';
-                ctx.fillStyle = '#ffffff';
-                ctx.fillText(data.pick.toUpperCase(), width / 2, 1250);
-
-                // 5. Draw Odds
-                ctx.font = 'bold 220px sans-serif';
+                // Made purple instead of white so it is visible against the white template box
+                ctx.font = 'bold 360px sans-serif';
                 ctx.fillStyle = '#8b5cf6';
-                ctx.fillText(data.odds, width / 2, 1600);
+                ctx.fillText(data.pick.toUpperCase(), width / 2, 1150);
 
-                // 6. Draw AI Insight (Green)
-                ctx.font = 'bold 140px sans-serif';
-                ctx.fillStyle = '#22c55e';
-                ctx.fillText(aiData.insight.toUpperCase(), width / 2, 5000);
+                // 5. Draw Odds and Risk
+                ctx.font = 'bold 240px sans-serif';
+                ctx.fillStyle = '#8b5cf6';
+                const oddsRiskStr = `${data.odds} | ${data.risk}U`;
+                ctx.fillText(oddsRiskStr, width / 2, 1750); // Lowered closer to image
+
+                // Note: AI insight drawing removed per request
 
                 // Export and dispatch
                 const dataUrl = canvas.toDataURL('image/jpeg', 0.95);

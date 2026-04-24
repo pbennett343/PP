@@ -3,12 +3,11 @@ import { google } from 'googleapis';
 
 export async function POST(req: Request) {
     try {
-        const { pick, odds, sport, insight, timestamp } = await req.json();
+        const { pick, odds, risk, sport, timestamp } = await req.json();
 
         const auth = new google.auth.GoogleAuth({
             credentials: {
                 client_email: process.env.GOOGLE_CLIENT_EMAIL,
-                // Handling both raw newlines and escaped newlines correctly
                 private_key: (process.env.GOOGLE_PRIVATE_KEY || '').replace(/\\n/g, '\n'),
             },
             scopes: ['https://www.googleapis.com/auth/spreadsheets'],
@@ -16,20 +15,22 @@ export async function POST(req: Request) {
 
         const sheets = google.sheets({ version: 'v4', auth });
 
-        // Active 2026 Write Sheet provided by user
+        // Active 2026 Write Sheet
         const spreadsheetId = '1gcqU3MNEZJpAhqDAkeUBiZBp6Xz4s2_kJzn-1UP8z_o';
+
+        const sheetTab = sport.toUpperCase().trim();
+        const dateFormatted = new Date(timestamp).toLocaleDateString('en-US');
 
         await sheets.spreadsheets.values.append({
             spreadsheetId,
-            range: 'Sheet1!A:E',
+            range: `${sheetTab}!A:D`,
             valueInputOption: 'USER_ENTERED',
             requestBody: {
                 values: [[
-                    timestamp,
-                    sport,
+                    dateFormatted,
                     pick,
                     odds,
-                    insight
+                    risk
                 ]],
             },
         });

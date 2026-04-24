@@ -9,8 +9,8 @@ export default function ReviewScreen({ data, aiData, onConfirm, onBack, isGenera
             <div className="review-grid">
                 <div className="review-item"><strong>Sport Category:</strong> {aiData.sport}</div>
                 <div className="review-item"><strong>Odds:</strong> {data.odds}</div>
+                <div className="review-item"><strong>Risk (Units):</strong> {data.risk}U</div>
                 <div className="review-item"><strong>Verbatim Pick:</strong> {data.pick}</div>
-                <div className="review-item highlight"><strong>AI Insight:</strong> {aiData.insight}</div>
             </div>
 
             <div className="form-group">

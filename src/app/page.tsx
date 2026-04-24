@@ -39,12 +39,10 @@ export default function Home() {
 
     const handleConfirm = () => {
         setIsGenerating(true);
-        // This triggers the ImageGenerator to mount and run its useEffect
         setShowGenerator(true);
     };
 
     const handleGeneratorComplete = async (dataUrl: string) => {
-        // Download logic
         const link = document.createElement("a");
         link.href = dataUrl;
         link.download = `PP_${aiData.sport}_Asset.jpg`;
@@ -52,7 +50,6 @@ export default function Home() {
         link.click();
         document.body.removeChild(link);
 
-        // Google Sheets log logic
         try {
             await fetch('/api/log', {
                 method: 'POST',
@@ -60,8 +57,8 @@ export default function Home() {
                 body: JSON.stringify({
                     pick: intakeData.pick,
                     odds: intakeData.odds,
+                    risk: intakeData.risk,
                     sport: aiData.sport,
-                    insight: aiData.insight,
                     timestamp: new Date().toISOString()
                 })
             });
@@ -70,7 +67,7 @@ export default function Home() {
             console.error("Sheets log failed:", e);
         }
 
-        alert("Asset Downloaded & Logged to 2026 Active Sheet!");
+        alert("Asset Downloaded & Logged to 2026 Sheet!");
         setShowGenerator(false);
         setIsGenerating(false);
         setStep(1);
@@ -87,8 +84,8 @@ export default function Home() {
     return (
         <main className="container wrapper">
             <div className="header-brand">
-                <h1 className="title">WTF Bets Premium Pick Generator</h1>
-                <p className="subtitle">AI Graphic Compositor</p>
+                <img src="/templates/header_logo.png" alt="WTF Bets Premium Picks" style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '0 auto 10px auto', borderRadius: '8px' }} />
+                <h1 className="title" style={{ fontSize: '2rem', marginTop: '0' }}>GENERATOR</h1>
             </div>
 
             {step === 1 && (
