@@ -22,7 +22,7 @@ Return your response in strict JSON format exactly like this:
     `;
 
         const model = genAI.getGenerativeModel({
-            model: 'gemini-1.5-flash',
+            model: 'gemini-2.5-flash',
             generationConfig: { responseMimeType: "application/json" }
         });
 

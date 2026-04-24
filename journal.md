@@ -6,7 +6,8 @@
 **Tech Stack:** React (Next.js/Vite), Vercel, GitHub, Google Sheets, Gemini AI.
 
 ## Strict Rules
-* **No Local Previews:** Never test or preview code locally (no node/npm). All code must be pushed to GitHub to be previewed directly on Vercel by the user.
+* **No Local Previews:** Never test or preview code locally (no node/npm).
+* **Vercel Previews Only:** All code must be pushed to a dedicated `preview` branch on GitHub to trigger Vercel preview deployments. NEVER push directly to the `main` production branch!
 
 ## Core Flow
 1. **Intake:** User uploads an image, enters "Pick" text, and enters Odds (e.g., -110).
