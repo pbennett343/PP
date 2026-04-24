@@ -6,7 +6,7 @@ import ImageGenerator from "@/components/ImageGenerator";
 import ResultsScreen from "@/components/ResultsScreen";
 
 export default function Home() {
-    const [step, setStep] = useState(0); // 0 = Home Screen
+    const [step, setStep] = useState(0);
     const [intakeData, setIntakeData] = useState<any>(null);
     const [aiData, setAiData] = useState<any>(null);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -85,7 +85,7 @@ export default function Home() {
     return (
         <main className="container wrapper">
             <div className="header-brand">
-                <img src="/templates/logo.png" alt="WTF Bets Logo" style={{ maxWidth: '400px', height: 'auto', display: 'block', margin: '0 auto 10px auto' }} />
+                <img src="/templates/WTF_Bets_Logo.PNG" alt="WTF Bets Logo" style={{ maxWidth: '400px', height: 'auto', display: 'block', margin: '0 auto 10px auto' }} />
                 <h1 className="title" style={{ fontSize: '1.8rem', marginTop: '0' }}>Premium Pick Generator</h1>
             </div>
 

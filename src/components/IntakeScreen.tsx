@@ -56,7 +56,7 @@ export default function IntakeScreen({ onSubmit, onBack, isAnalyzing }: { onSubm
                 {image && <img src={image} alt="Preview" className="img-preview" />}
             </div>
             <div className="button-group">
-                <button className="secondary-btn" onClick={onBack} disabled={isAnalyzing}>Home</button>
+                <button className="secondary-btn" onClick={onBack} disabled={isAnalyzing}>Go Back</button>
                 <button
                     className="primary-btn"
                     onClick={() => onSubmit({ image, pick, odds, risk })}
