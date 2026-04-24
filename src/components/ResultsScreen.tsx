@@ -62,7 +62,10 @@ export default function ResultsScreen({ onBack }: { onBack: () => void }) {
                     ))}
                 </div>
             )}
-            <button onClick={onBack} className="secondary-btn" style={{ marginTop: '20px', width: '100%' }}>Back to Home</button>
+            <div className="button-group" style={{ marginTop: '20px' }}>
+                <button onClick={onBack} className="secondary-btn" style={{ flex: 1 }}>Home</button>
+                <button onClick={fetchPending} className="primary-btn" style={{ flex: 1 }}>Refresh</button>
+            </div>
         </div>
     );
 }

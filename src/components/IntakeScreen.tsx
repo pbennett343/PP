@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 
-export default function IntakeScreen({ onSubmit, isAnalyzing }: { onSubmit: any, isAnalyzing: boolean }) {
+export default function IntakeScreen({ onSubmit, onBack, isAnalyzing }: { onSubmit: any, onBack: any, isAnalyzing: boolean }) {
     const [image, setImage] = useState<string | null>(null);
     const [pick, setPick] = useState("");
     const [odds, setOdds] = useState("");
@@ -55,13 +55,16 @@ export default function IntakeScreen({ onSubmit, isAnalyzing }: { onSubmit: any,
                     className="input-field"
                 />
             </div>
-            <button
-                className="primary-btn"
-                onClick={() => onSubmit({ image, pick, odds, risk })}
-                disabled={!image || !pick || !odds || !risk || isAnalyzing}
-            >
-                {isAnalyzing ? "Analyzing via AI..." : "Continue to AI Review"}
-            </button>
+            <div className="button-group">
+                <button className="secondary-btn" onClick={onBack} disabled={isAnalyzing}>Home</button>
+                <button
+                    className="primary-btn"
+                    onClick={() => onSubmit({ image, pick, odds, risk })}
+                    disabled={!image || !pick || !odds || !risk || isAnalyzing}
+                >
+                    {isAnalyzing ? "Analyzing via AI..." : "Continue to AI Review"}
+                </button>
+            </div>
         </div>
     );
 }

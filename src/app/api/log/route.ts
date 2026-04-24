@@ -27,8 +27,8 @@ export async function POST(req: Request) {
         });
 
         const numRows = readRes.data.values ? readRes.data.values.length : 0;
-        // Assume minimum start is row 14 if less headers are found, else the very next row.
-        const targetRow = Math.max(numRows + 1, 14);
+        // Base changed to 4 because data explicitly starts on Row 4 per picture
+        const targetRow = Math.max(numRows + 1, 4);
 
         const dateFormatted = new Date(timestamp).toLocaleDateString('en-US');
 

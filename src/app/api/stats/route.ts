@@ -20,7 +20,7 @@ export async function GET(req: Request) {
 
         const res = await sheets.spreadsheets.values.get({
             spreadsheetId,
-            range: `${sport.toUpperCase().trim()}!C3:C3`,
+            range: `${sport.toUpperCase().trim()}!C2:C2`,
         });
 
         let units = "0";

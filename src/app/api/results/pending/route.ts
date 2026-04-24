@@ -22,14 +22,14 @@ export async function GET() {
             try {
                 const res = await sheets.spreadsheets.values.get({
                     spreadsheetId,
-                    range: `${sport}!A14:E`,
+                    range: `${sport}!A4:E`,
                 });
                 const rows = res.data.values || [];
                 rows.forEach((row, index) => {
                     if (row[1] && row[1].trim() !== "" && (!row[4] || row[4].trim() === "")) {
                         pending.push({
                             tab: sport,
-                            rowIdx: index + 14,
+                            rowIdx: index + 4,
                             date: row[0] || "",
                             pick: row[1],
                             odds: row[2] || ""

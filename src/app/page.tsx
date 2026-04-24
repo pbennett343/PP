@@ -85,8 +85,8 @@ export default function Home() {
     return (
         <main className="container wrapper">
             <div className="header-brand">
-                <img src="/templates/header_logo.png" alt="WTF Bets Premium Picks" style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '0 auto 10px auto', borderRadius: '8px' }} />
-                <h1 className="title" style={{ fontSize: '2rem', marginTop: '0' }}>GENERATOR</h1>
+                <img src="/templates/logo.png" alt="WTF Bets Logo" style={{ maxWidth: '400px', height: 'auto', display: 'block', margin: '0 auto 10px auto' }} />
+                <h1 className="title" style={{ fontSize: '1.8rem', marginTop: '0' }}>Premium Pick Generator</h1>
             </div>
 
             {step === 0 && (
@@ -97,7 +97,7 @@ export default function Home() {
             )}
 
             {step === 1 && (
-                <IntakeScreen onSubmit={handleIntakeSubmit} isAnalyzing={isAnalyzing} />
+                <IntakeScreen onSubmit={handleIntakeSubmit} onBack={() => setStep(0)} isAnalyzing={isAnalyzing} />
             )}
 
             {step === 2 && (
