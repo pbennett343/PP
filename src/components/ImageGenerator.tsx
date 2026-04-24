@@ -12,13 +12,12 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
             if (!ctx) return;
 
             try {
-                // Fetch stats first
                 let statsText = "";
                 try {
                     const sport = aiData.sport.toUpperCase().trim();
                     const response = await fetch(`/api/stats?sport=${sport}`);
                     const resData = await response.json();
-                    if (resData.success && resData.units) {
+                    if (resData.success && resData.units !== undefined) {
                         const prefix = resData.units.toString().startsWith('-') ? '' : '+';
                         statsText = `OUR ${sport} PICKS ARE ${prefix}${resData.units}U THIS YEAR`;
                     }
@@ -26,13 +25,13 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
                     console.warn("Failed to retrieve stats:", e);
                 }
 
-                // 1. Load Background Template Dynamically
                 const bgImg = new Image();
                 bgImg.crossOrigin = "anonymous";
-                bgImg.src = "/templates/PP_Template.png";
+                // CRITICAL BUG FIX: Linux runtime is strictly case sensitive!
+                bgImg.src = "/templates/PP_Template.PNG";
                 await new Promise((resolve, reject) => {
                     bgImg.onload = resolve;
-                    bgImg.onerror = reject;
+                    bgImg.onerror = () => reject(new Error("Failed to load /templates/PP_Template.PNG"));
                 });
 
                 const width = bgImg.width;
@@ -81,15 +80,15 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
 
                 if (data.image) {
                     const userImg = new Image();
-                    userImg.crossOrigin = "anonymous";
+                    // Blobs typically do not require anonymous crossOrigin and can throw DOM exceptions if strictly evaluated.
                     userImg.src = data.image;
                     await new Promise((resolve, reject) => {
                         userImg.onload = resolve;
-                        userImg.onerror = reject;
+                        userImg.onerror = () => reject(new Error("Failed to load user image blob"));
                     });
 
                     const imgMarginTop = 300 * scale;
-                    const imgMarginBottom = statsText ? 500 * scale : 400 * scale; // Extra space if text exists
+                    const imgMarginBottom = statsText ? 500 * scale : 400 * scale;
                     const imgMarginSides = 500 * scale;
 
                     const imgStartX = imgMarginSides;
@@ -119,7 +118,6 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
                     ctx.strokeRect(drawX, drawY, drawW, drawH);
                 }
 
-                // 6. Draw Final Stats Text
                 if (statsText) {
                     ctx.font = `bold ${160 * scale}px sans-serif`;
                     ctx.fillStyle = '#22c55e'; // Green
@@ -131,7 +129,7 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
                 onComplete(dataUrl);
 
             } catch (err) {
-                console.error(err);
+                console.error("Canvas Gen Error:", err);
                 onError("Canvas failed to composite image.");
             }
         };
