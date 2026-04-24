@@ -27,7 +27,6 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
 
                 const bgImg = new Image();
                 bgImg.crossOrigin = "anonymous";
-                // CRITICAL BUG FIX: Linux runtime is strictly case sensitive!
                 bgImg.src = "/templates/PP_Template.PNG";
                 await new Promise((resolve, reject) => {
                     bgImg.onload = resolve;
@@ -47,7 +46,8 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
                 ctx.fillStyle = '#8b5cf6';
                 ctx.textAlign = 'center';
 
-                const dateY = 600 * scale;
+                // Shift Date slightly down further from logo margin
+                const dateY = 750 * scale;
                 ctx.fillText(dateStr, width / 2, dateY);
 
                 const pickText = data.pick.toUpperCase();
@@ -60,6 +60,7 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
                 const rectH = 550 * scale;
                 const rectX = (width - rectW) / 2;
 
+                // Pushes box relative down to new date
                 const rectY = dateY + (200 * scale);
                 const pickY = rectY + Math.round(rectH * 0.75);
 
@@ -72,15 +73,21 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
                 ctx.fillStyle = '#8b5cf6';
                 ctx.fillText(pickText, width / 2, pickY);
 
-                ctx.font = `bold ${240 * scale}px sans-serif`;
+                ctx.font = `bold ${220 * scale}px sans-serif`;
                 ctx.fillStyle = '#8b5cf6';
-                const oddsRiskStr = `${data.odds} | ${data.risk}U`;
-                const oddsY = pickY + (450 * scale);
-                ctx.fillText(oddsRiskStr, width / 2, oddsY);
+
+                // Stack Odds and Risk explicitly cleanly
+                const oddsStr = `Odds: ${data.odds}`;
+                const riskStr = `Risk: ${data.risk} units`;
+
+                const oddsY = pickY + (400 * scale);
+                const riskY = oddsY + (260 * scale);
+
+                ctx.fillText(oddsStr, width / 2, oddsY);
+                ctx.fillText(riskStr, width / 2, riskY);
 
                 if (data.image) {
                     const userImg = new Image();
-                    // Blobs typically do not require anonymous crossOrigin and can throw DOM exceptions if strictly evaluated.
                     userImg.src = data.image;
                     await new Promise((resolve, reject) => {
                         userImg.onload = resolve;
@@ -92,7 +99,9 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
                     const imgMarginSides = 500 * scale;
 
                     const imgStartX = imgMarginSides;
-                    const imgStartY = oddsY + imgMarginTop;
+
+                    // Image top Y naturally begins from the new bottom boundary: riskY
+                    const imgStartY = riskY + imgMarginTop;
                     const maxImgW = width - (imgMarginSides * 2);
                     const maxImgH = height - imgStartY - imgMarginBottom;
 
