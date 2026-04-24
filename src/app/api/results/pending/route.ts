@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
 
+export const dynamic = 'force-dynamic';
+
 const SPORTS = ["MLB", "NFL", "NBA", "NHL", "NCAAF", "NCAAM", "WNBA"];
 
 export async function GET() {
