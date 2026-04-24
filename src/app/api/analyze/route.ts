@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
 
 export async function POST(req: Request) {
     try {
@@ -21,15 +21,13 @@ Return your response in strict JSON format exactly like this:
 }
     `;
 
-        const response = await ai.models.generateContent({
+        const model = genAI.getGenerativeModel({
             model: 'gemini-1.5-flash',
-            contents: prompt,
-            config: {
-                responseMimeType: "application/json",
-            }
+            generationConfig: { responseMimeType: "application/json" }
         });
 
-        const resultText = response.text || "{}";
+        const result = await model.generateContent(prompt);
+        const resultText = result.response.text() || "{}";
         const resultObj = JSON.parse(resultText);
 
         return NextResponse.json({ success: true, aiData: resultObj });

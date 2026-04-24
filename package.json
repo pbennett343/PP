@@ -14,7 +14,7 @@
         "react-dom": "^18.3.1",
         "google-auth-library": "^9.10.0",
         "googleapis": "^140.0.0",
-        "@google/genai": "^0.1.2"
+        "@google/generative-ai": "latest"
     },
     "devDependencies": {
         "typescript": "^5",
