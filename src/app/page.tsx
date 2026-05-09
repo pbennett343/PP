@@ -40,7 +40,7 @@ export default function Home() {
         try {
             const res = await fetch(dataUrl);
             const blob = await res.blob();
-            const file = new File([blob], fileName, { type: 'image/jpeg' });
+            const file = new File([blob], fileName, { type: 'image/jpg' });
             
             if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
                 await navigator.share({
