@@ -6,6 +6,7 @@ export default function IntakeScreen({ onSubmit, onBack, isAnalyzing }: { onSubm
     const [pick, setPick] = useState("");
     const [odds, setOdds] = useState("");
     const [risk, setRisk] = useState("");
+    const [sport, setSport] = useState("MLB");
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -18,6 +19,24 @@ export default function IntakeScreen({ onSubmit, onBack, isAnalyzing }: { onSubm
     return (
         <div className="card animate-fade-in">
             <h2 className="section-title">Step 1: Intake</h2>
+            <div className="form-group">
+                <label>Sport</label>
+                <select 
+                    value={sport} 
+                    onChange={(e) => setSport(e.target.value)} 
+                    className="input-field" 
+                    style={{ height: '45px' }}
+                >
+                    <option value="MLB">MLB</option>
+                    <option value="NFL">NFL</option>
+                    <option value="NBA">NBA</option>
+                    <option value="NHL">NHL</option>
+                    <option value="NCAAF">NCAAF</option>
+                    <option value="NCAAM">NCAAM</option>
+                    <option value="WNBA">WNBA</option>
+                    <option value="SOCCER">SOCCER</option>
+                </select>
+            </div>
             <div className="form-group">
                 <label>Pick Text</label>
                 <textarea
@@ -59,10 +78,10 @@ export default function IntakeScreen({ onSubmit, onBack, isAnalyzing }: { onSubm
                 <button className="secondary-btn" onClick={onBack} disabled={isAnalyzing}>Go Back</button>
                 <button
                     className="primary-btn"
-                    onClick={() => onSubmit({ image, pick, odds, risk })}
+                    onClick={() => onSubmit({ image, pick, odds, risk, sport })}
                     disabled={!image || !pick || !odds || !risk || isAnalyzing}
                 >
-                    {isAnalyzing ? "Analyzing via AI..." : "Continue to AI Review"}
+                    {isAnalyzing ? "Processing..." : "Continue to Review"}
                 </button>
             </div>
         </div>

@@ -16,23 +16,13 @@ export default function Home() {
     const handleIntakeSubmit = async (data: any) => {
         setIsAnalyzing(true);
         try {
-            const response = await fetch('/api/analyze', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ pick: data.pick })
-            });
-            const result = await response.json();
-
-            if (result.success) {
-                setIntakeData(data);
-                setAiData(result.aiData);
-                setStep(2);
-            } else {
-                alert("AI processing failed: " + result.error);
-            }
+            // Bypass AI - directly use user input
+            setIntakeData(data);
+            setAiData({ sport: data.sport });
+            setStep(2);
         } catch (e) {
             console.error(e);
-            alert("Network error.");
+            alert("Error processing intake.");
         } finally {
             setIsAnalyzing(false);
         }
@@ -44,12 +34,38 @@ export default function Home() {
     };
 
     const handleGeneratorComplete = async (dataUrl: string) => {
-        const link = document.createElement("a");
-        link.href = dataUrl;
-        link.download = `PP_${aiData.sport}_Asset.jpg`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const fileName = `PP_${aiData.sport}_Asset.jpg`;
+        
+        // Attempt Web Share API (Great for iOS: gives "Save Image" option)
+        try {
+            const res = await fetch(dataUrl);
+            const blob = await res.blob();
+            const file = new File([blob], fileName, { type: 'image/jpeg' });
+            
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: 'WTF Bets Asset',
+                });
+            } else {
+                // Fallback to standard download
+                const link = document.createElement("a");
+                link.href = dataUrl;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        } catch (error) {
+            console.warn("Share failed or was canceled:", error);
+            // If share fails, fallback to download
+            const link = document.createElement("a");
+            link.href = dataUrl;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
 
         try {
             await fetch('/api/log', {
