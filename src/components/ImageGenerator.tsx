@@ -166,9 +166,11 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
 
                     ctx.drawImage(userImg, drawX, drawY, drawW, drawH);
 
-                    ctx.lineWidth = 25 * scale;
-                    ctx.strokeStyle = '#8b5cf6';
-                    ctx.strokeRect(drawX, drawY, drawW, drawH);
+                    if (data.image) {
+                        ctx.lineWidth = 25 * scale;
+                        ctx.strokeStyle = '#8b5cf6';
+                        ctx.strokeRect(drawX, drawY, drawW, drawH);
+                    }
 
                 if (statsText) {
                     ctx.font = `bold ${160 * scale}px sans-serif`;
