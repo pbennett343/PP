@@ -74,7 +74,7 @@ export default function ReviewScreen({ data, aiData, onConfirm, onBack, isGenera
                             <span style={{ color: '#a1a1aa', fontSize: '0.8rem', display: 'block', marginBottom: '2px' }}>Odds</span>
                             <span style={{ fontSize: '1rem', fontWeight: 'bold', color: '#8b5cf6' }}>{odds}</span>
                         </div>
-                        <div style={{ gridColumn: '1 / -1' }}>
+                        <div>
                             <span style={{ color: '#a1a1aa', fontSize: '0.8rem', display: 'block', marginBottom: '2px' }}>Pick</span>
                             <span style={{ fontSize: '1rem', fontWeight: 'bold', color: '#8b5cf6' }}>{pick}</span>
                         </div>
