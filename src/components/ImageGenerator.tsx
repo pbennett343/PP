@@ -127,17 +127,20 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
                 ctx.textAlign = 'center';
                 // --- END NEW DRAWING ---
 
-                if (data.image) {
-                    const userImg = new Image();
-                    userImg.src = data.image;
-                    await new Promise((resolve, reject) => {
-                        userImg.onload = resolve;
-                        userImg.onerror = () => reject(new Error("Failed to load user image blob"));
-                    });
+                const imgSrc = data.image || "/templates/WTF_Logo.PNG";
+                const userImg = new Image();
+                if (!data.image) {
+                    userImg.crossOrigin = "anonymous";
+                }
+                userImg.src = imgSrc;
+                await new Promise((resolve, reject) => {
+                    userImg.onload = resolve;
+                    userImg.onerror = () => reject(new Error("Failed to load image blob or logo"));
+                });
 
-                    const imgMarginTop = 300 * scale;
-                    const imgMarginBottom = statsText ? 500 * scale : 400 * scale;
-                    const imgMarginSides = 500 * scale;
+                const imgMarginTop = 300 * scale;
+                const imgMarginBottom = statsText ? 500 * scale : 400 * scale;
+                const imgMarginSides = 500 * scale;
 
                     const imgStartX = imgMarginSides;
 
@@ -166,7 +169,6 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
                     ctx.lineWidth = 25 * scale;
                     ctx.strokeStyle = '#8b5cf6';
                     ctx.strokeRect(drawX, drawY, drawW, drawH);
-                }
 
                 if (statsText) {
                     ctx.font = `bold ${160 * scale}px sans-serif`;

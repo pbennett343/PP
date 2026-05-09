@@ -84,7 +84,7 @@ export default function ReviewScreen({ data, aiData, onConfirm, onBack, isGenera
 
             <div className="form-group">
                 <label style={{ color: '#a1a1aa', fontSize: '0.85rem', marginBottom: '5px' }}>Image Asset</label>
-                <img src={data.image} alt="Upload" className="img-preview" style={{ maxHeight: '200px', objectFit: 'contain', background: '#000', borderRadius: '8px' }} />
+                <img src={data.image || "/templates/WTF_Logo.PNG"} alt="Upload" className="img-preview" style={{ maxHeight: '200px', objectFit: 'contain', background: '#000', borderRadius: '8px' }} />
             </div>
 
             <div className="button-group" style={{ marginTop: '20px' }}>

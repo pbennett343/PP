@@ -79,7 +79,7 @@ export default function IntakeScreen({ onSubmit, onBack, isAnalyzing }: { onSubm
                 <button
                     className="primary-btn"
                     onClick={() => onSubmit({ image, pick, odds, risk, sport })}
-                    disabled={!image || !pick || !odds || !risk || isAnalyzing}
+                    disabled={!pick || !odds || !risk || isAnalyzing}
                 >
                     {isAnalyzing ? "Processing..." : "Continue to Review"}
                 </button>
