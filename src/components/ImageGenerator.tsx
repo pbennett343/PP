@@ -172,7 +172,7 @@ export default function ImageGenerator({ data, aiData, onComplete, onError }: an
                         ctx.strokeRect(drawX, drawY, drawW, drawH);
 
                         ctx.textAlign = 'left';
-                        ctx.font = `normal ${150 * scale}px sans-serif`;
+                        ctx.font = `normal ${75 * scale}px sans-serif`;
                         ctx.fillStyle = '#a1a1aa';
                         ctx.fillText("DATA BEHIND PICK:", drawX, drawY - (60 * scale));
                         ctx.textAlign = 'center'; // Reset alignment
